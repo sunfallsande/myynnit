@@ -13,6 +13,10 @@ table {
   width: 100%;
 }
 
+tr.datacellone {
+	background-color: #CC9999; color: black;
+}
+
 tr {
 	font-family: arial, sans-serif;
 	text-align: center;
@@ -22,23 +26,21 @@ td, th {
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
-  background-color: green;
 }
 
 input {
   text-align:center;
 }
 
-tr:nth-child(even) {
-  background-color: #dddddd;
-}
+
 </style>
 </head>
 <body>
 <table id="listaus">
 	<thead>	
+	
 
-	<tr>	
+	<tr class="datacellone">
 	<th>Hakusana</th>
 	<th><form action="MyServlet" method="post">
 	<input type="text" name="fname" placeholder="type first name" /></th>
@@ -47,9 +49,10 @@ tr:nth-child(even) {
 	<th></th>
 	<th></th>
 	</tr>	
+
 	
 		
-		<tr>
+		<tr class="datacellone">
 			<th>ID</th>
 			<th>Etunimi</th>
 			<th>Sukunimi</th>
