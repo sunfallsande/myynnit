@@ -35,7 +35,7 @@
 			</tr>
 		</tbody>
 	</table>
-	<input type="hidden" name="vanhaid" id="vanhaid">	
+	<input type="hidden" name="id" id="id">	
 </form>
 <span id="ilmo"></span>
 </body>
@@ -48,7 +48,7 @@ $(document).ready(function(){
 	//GET /autot/haeyksi/rekno
 	var id = requestURLParam("id"); //Funktio löytyy scripts/main.js 	
 	$.ajax({url:"asiakkaat/haeyksi/"+id, type:"GET", dataType:"json", success:function(result){	
-		$("#vanhaid").val(result.id);		
+		$("#id").val(result.id);		
 		$("#etunimi").val(result.etunimi);	
 		$("#sukunimi").val(result.sukunimi);
 		$("#puhelin").val(result.puhelin);
@@ -94,7 +94,7 @@ $(document).ready(function(){
 			}
 		},			
 		submitHandler: function(form) {	
-			lisaaTiedot();
+			paivitaTiedot();
 		}				
 	}); 	
 });
@@ -107,7 +107,7 @@ function paivitaTiedot(){
       	$("#ilmo").html("Asiakkaan päivittäminen epäonnistui.");
       }else if(result.response==1){			
       	$("#ilmo").html("Asiakkaan päivittäminen onnistui.");
-      	$("#id","#etunimi", "#sukunimi", "#puhelin", "#sposti").val("");
+      	$("id", "#etunimi", "#sukunimi", "#puhelin", "#sposti").val("");
 	  }
   }});	
 }

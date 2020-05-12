@@ -135,11 +135,11 @@ public class Dao {
         		rs = stmtPrep.executeQuery();  
         		if(rs.isBeforeFirst()){ //jos kysely tuotti dataa, eli rekNo on käytössä
         			rs.next();
-        			asiakas = new Asiakas();        			
+        			asiakas = new Asiakas();  
         			asiakas.setEtunimi(rs.getString(2));
 					asiakas.setSukunimi(rs.getString(3));
 					asiakas.setPuhelin(rs.getString(4));	
-					asiakas.setSposti(rs.getString(5));       			      			
+					asiakas.setSposti(rs.getString(5));       	
 				}        		
 			}	
 			con.close();  
@@ -151,7 +151,7 @@ public class Dao {
 	
 	public boolean muutaAuto(Asiakas asiakas, String id){
 		boolean paluuArvo=true;
-		sql="UPDATE asiakkaat SET asiakas_id=?, etunimi=?, sukunimi=?, puhelin=?, sposti=? WHERE asiakas_id=?";						  
+		sql="UPDATE asiakkaat SET etunimi=?, sukunimi=?, puhelin=?, sposti=? WHERE asiakas_id=?";						  
 		try {
 			con = yhdista();
 			stmtPrep=con.prepareStatement(sql); 
@@ -168,6 +168,8 @@ public class Dao {
 		}				
 		return paluuArvo;
 	}
+
+
 
 
 
