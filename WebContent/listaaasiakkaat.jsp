@@ -16,16 +16,18 @@
 		</tr>	
 			
 			<tr>
-				<th colspan="3" class="oikealle">Hakusana:</th>
-				<th><input type="text" id="hakusana"></th>
-				<th><input type="button" id="hae" value="Hae"></th>
-			</tr>		
 			<tr>
+			<th class="oikealle">Hakusana:</th>
+			<th colspan="3"><input type="text" id="hakusana"></th>
+			<th><input type="button" value="hae" id="hakunappi"></th>
+		</tr>			
+		<tr>
+
 				<th>Etunimi</th>
 				<th>Sukunimi</th>
 				<th>Puhelin</th>
 				<th>Sposti</th>		
-				<th>Poista</th>			
+				<th>Muuta</th>		
 			</tr>
 		</thead>
 		<tbody>
@@ -61,7 +63,8 @@ function haeTiedot(){
         	htmlStr+="<td>"+field.sukunimi+"</td>";
         	htmlStr+="<td>"+field.puhelin+"</td>";
         	htmlStr+="<td>"+field.sposti+"</td>"; 
-        	htmlStr+="<td><span class='poista' onclick=poista('"+field.id+"')>Poista</span></td>";
+        	htmlStr+="<td><a href='muutaasiakas.jsp?id="+field.id+"'>Muuta</a>&nbsp;"; 
+        	htmlStr+="<span class='poista' onclick=poista('"+field.id+"')>Poista</span></td>";
         	htmlStr+="</tr>";
         	$("#listaus tbody").append(htmlStr);
         });
