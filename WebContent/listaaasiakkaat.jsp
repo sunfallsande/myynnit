@@ -6,7 +6,7 @@
 <meta charset="ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="css/main.css">
 <script src="scripts/main.js"></script>
-<title>Auto-ohjelma</title>
+<title>Asiakas-sovellus</title>
 <style>
 .oikealle{
 	text-align: right;
@@ -18,7 +18,7 @@
 	<thead>	
 		<tr>
 			<th colspan="4" id="ilmo"></th>
-			<th><a id="uusiAsiakas" href="lisaaasiakas.jsp">Lisää uusi auto</a></th>
+			<th><a id="uusiAsiakas" href="lisaaasiakas.jsp">Lisää uusi asiakas</a></th>
 		</tr>	
 		<tr>
 			<th class="oikealle">Hakusana:</th>
