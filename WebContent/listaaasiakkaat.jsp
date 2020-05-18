@@ -4,86 +4,98 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="css/main.css">
-<title>Autojen listaus</title>
+<script src="scripts/main.js"></script>
+<title>Auto-ohjelma</title>
+<style>
+.oikealle{
+	text-align: right;
+}
+</style>
 </head>
-<body>
-	<table id="listaus">
-		<thead>	
-			<tr>
-			<th colspan="5" class="oikealle"><span id="uusiAsiakas">Lisää uusi asiakas</span></th>
+<body onkeydown="tutkiKey(event)">
+<table id="listaus">
+	<thead>	
+		<tr>
+			<th colspan="4" id="ilmo"></th>
+			<th><a id="uusiAsiakas" href="lisaaasiakas.jsp">Lisää uusi auto</a></th>
 		</tr>	
-			
-			<tr>
-			<tr>
+		<tr>
 			<th class="oikealle">Hakusana:</th>
 			<th colspan="3"><input type="text" id="hakusana"></th>
-			<th><input type="button" value="hae" id="hakunappi"></th>
+			<th><input type="button" value="hae" id="hakunappi" onclick="haeTiedot()"></th>
 		</tr>			
 		<tr>
-
-				<th>Etunimi</th>
-				<th>Sukunimi</th>
-				<th>Puhelin</th>
-				<th>Sposti</th>		
-				<th>Muuta</th>		
-			</tr>
-		</thead>
-		<tbody>
-		</tbody>
-	</table>
+			<th>Etunimi</th>
+			<th>Sukunimi</th>
+			<th>Puhelin</th>
+			<th>Sähköposti</th>
+			<th></th>							
+		</tr>
+	</thead>
+	<tbody id="tbody">
+	</tbody>
+</table>
 <script>
-$(document).ready(function(){	
-	$(document.body).on("keydown", function(event){
-		  if(event.which==13){ //Enteriä painettu, ajetaan haku
-			  haeTiedot();
-		  }
-	});	
-	
-	$("#uusiAsiakas").click(function(){
-		document.location="lisaaasiakas.jsp";
-	});
-	
-	$("#hae").click(function(){	
+haeTiedot();	
+document.getElementById("hakusana").focus();//viedään kursori hakusana-kenttään sivun latauksen yhteydessä
+
+function tutkiKey(event){
+	if(event.keyCode==13){//Enter
 		haeTiedot();
-	});
-	$("#hakusana").focus();//viedään kursori hakusana-kenttään sivun latauksen yhteydessä
-	haeTiedot();
-});
-function haeTiedot(){	
-	$("#listaus tbody").empty();
-	//$.getJSON on $.ajax:n alifunktio, joka on erikoistunut jsonin hakemiseen. Kumpaakin voi tässä käyttää.
-	//$.getJSON({url:"asiakkaat/"+$("#hakusana").val(), type:"GET", success:function(result){
-	$.ajax({url:"asiakkaat/"+$("#hakusana").val(), type:"GET", dataType:"json", success:function(result){
-		$.each(result.asiakkaat, function(i, field){  
-        	var htmlStr;
-        	htmlStr+="<tr>"; 
-        	htmlStr+="<td>"+field.etunimi+"</td>";
-        	htmlStr+="<td>"+field.sukunimi+"</td>";
-        	htmlStr+="<td>"+field.puhelin+"</td>";
-        	htmlStr+="<td>"+field.sposti+"</td>"; 
-        	htmlStr+="<td><a href='muutaasiakas.jsp?id="+field.id+"'>Muuta</a>&nbsp;"; 
-        	htmlStr+="<span class='poista' onclick=poista('"+field.id+"')>Poista</span></td>";
-        	htmlStr+="</tr>";
-        	$("#listaus tbody").append(htmlStr);
-        });
-    }});	
+	}		
 }
+//Funktio tietojen hakemista varten
+//GET   /autot/{hakusana}
+function haeTiedot(){	
+	document.getElementById("tbody").innerHTML = "";
+	fetch("asiakkaat/" + document.getElementById("hakusana").value,{//Lähetetään kutsu backendiin
+	      method: 'GET'
+	    })
+	.then(function (response) {//Odotetaan vastausta ja muutetaan JSON-vastaus objektiksi
+		return response.json()	
+	})
+	.then(function (responseJson) {//Otetaan vastaan objekti responseJson-parametrissä		
+		var asiakkaat = responseJson.asiakkaat;	
+		var htmlStr="";
+		for(var i=0;i<asiakkaat.length;i++){			
+        	htmlStr+="<tr>";
+        	htmlStr+="<td>"+asiakkaat[i].etunimi+"</td>";
+        	htmlStr+="<td>"+asiakkaat[i].sukunimi+"</td>";
+        	htmlStr+="<td>"+asiakkaat[i].puhelin+"</td>";
+        	htmlStr+="<td>"+asiakkaat[i].sposti+"</td>";  
+        	htmlStr+="<td><a href='muutaasiakas.jsp?id="+asiakkaat[i].id+"'>Muuta</a>&nbsp;";
+        	htmlStr+="<span class='poista' onclick=poista('"+asiakkaat[i].id+"')>Poista</span></td>";
+        	htmlStr+="</tr>";        	
+		}
+		document.getElementById("tbody").innerHTML = htmlStr;		
+	})	
+}
+
+//Funktio tietojen poistamista varten. Kutsutaan backin DELETE-metodia ja välitetään poistettavan tiedon id. 
+//DELETE /autot/id
 function poista(id){
-	if(confirm("Poista auto " + id +"?")){
-		$.ajax({url:"asiakkaat/"+id, type:"DELETE", dataType:"json", success:function(result) { //result on joko {"response:1"} tai {"response:0"}
-	        if(result.response==0){
-	        	$("#ilmo").html("Asiakkaan poisto epäonnistui.");
-	        }else if(result.response==1){
-	        	$("#rivi_"+id).css("background-color", "red"); //Värjätään poistetun asiakkaan rivi
-	        	alert("Asiakkaan " + id +" poisto onnistui.");
+	if(confirm("Poista asiakas " + id +"?")){	
+		fetch("asiakkaat/"+ id,{//Lähetetään kutsu backendiin
+		      method: 'DELETE'		      	      
+		    })
+		.then(function (response) {//Odotetaan vastausta ja muutetaan JSON-vastaus objektiksi
+			return response.json()
+		})
+		.then(function (responseJson) {//Otetaan vastaan objekti responseJson-parametrissä		
+			var vastaus = responseJson.response;		
+			if(vastaus==0){
+				document.getElementById("ilmo").innerHTML= "Asiakkaan poisto epäonnistui.";
+	        }else if(vastaus==1){	        	
+	        	document.getElementById("ilmo").innerHTML="Auton " + id +" poisto onnistui.";
 				haeTiedot();        	
-			}
-	    }});
-	}
+			}	
+			setTimeout(function(){ document.getElementById("ilmo").innerHTML=""; }, 5000);
+		})		
+	}	
 }
 </script>
 </body>
 </html>
+
 

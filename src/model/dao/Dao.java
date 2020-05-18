@@ -149,7 +149,7 @@ public class Dao {
 		return asiakas;		
 	}
 	
-	public boolean muutaAuto(Asiakas asiakas, String id){
+	public boolean muutaAsiakas(Asiakas asiakas, String id){
 		boolean paluuArvo=true;
 		sql="UPDATE asiakkaat SET etunimi=?, sukunimi=?, puhelin=?, sposti=? WHERE asiakas_id=?";						  
 		try {

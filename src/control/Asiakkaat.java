@@ -105,7 +105,7 @@ public class Asiakkaat extends HttpServlet {
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
 		Dao dao = new Dao();			
-		if(dao.muutaAuto(asiakas, id)){ //metodi palauttaa true/false
+		if(dao.muutaAsiakas(asiakas, id)){ //metodi palauttaa true/false
 			out.println("{\"response\":1}");  //Auton muuttaminen onnistui {"response":1}
 		}else{
 			out.println("{\"response\":0}");  //Auton muuttaminen epäonnistui {"response":0}
